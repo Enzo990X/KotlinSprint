@@ -1,6 +1,15 @@
 package org.example.lesson_1
 
 fun main() {
-    println("Тестовое решение к уроку 1 задаче 2")
-}
+    val numberOfOrders: Int = 75
+    val orderPlacedMessage: String = "Thank you for a purchase"
 
+    println(numberOfOrders)
+    println(orderPlacedMessage)
+
+    var numberOfEmployees: Int = 2000
+    //println(numberOfEmployees)
+
+    numberOfEmployees = 1999
+    println(numberOfEmployees)
+}
