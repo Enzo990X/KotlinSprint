@@ -7,7 +7,7 @@ fun main() {
     val pupil3 = Pupils(3f)
     val pupil4 = Pupils(5f)
 
-    val averageGrade = (pupil1.grade + pupil2.grade + pupil3.grade + pupil4.grade) / Pupils.numberOfInstance
+    val averageGrade = (pupil1.grade + pupil2.grade + pupil3.grade + pupil4.grade) / Pupils.numberOfPupils
 
     println("$averageGrade")
 }
@@ -15,10 +15,10 @@ fun main() {
 class Pupils(val grade: Float) {
 
     companion object {
-        var numberOfInstance:Int = 0
+        var numberOfPupils:Int = 0
     }
 
     init {
-        numberOfInstance++
+        numberOfPupils++
     }
 }
