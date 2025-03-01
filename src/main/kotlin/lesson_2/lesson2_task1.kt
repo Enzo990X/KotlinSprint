@@ -7,7 +7,7 @@ fun main() {
     val pupil3 = Pupils(3f)
     val pupil4 = Pupils(5f)
 
-    val averageGrade = ((pupil1.grade + pupil2.grade + pupil3.grade + pupil4.grade) / Pupils.numberOfInstance)
+    val averageGrade = (pupil1.grade + pupil2.grade + pupil3.grade + pupil4.grade) / Pupils.numberOfInstance
 
     println("$averageGrade")
 }
