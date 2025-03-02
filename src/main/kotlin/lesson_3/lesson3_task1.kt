@@ -17,7 +17,7 @@ fun main() {
     println(greetingMessage)
 /*
     //По заданию
-    val userName = "Flint"
+    val userName = "Антон"
     var greetingMessage = "Добрый день, $userName"
     println(greetingMessage)
 
