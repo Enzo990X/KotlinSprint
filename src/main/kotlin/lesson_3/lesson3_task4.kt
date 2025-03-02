@@ -10,7 +10,7 @@ fun main() {
     println(move)
 
     startPosition = "D2"
-    endPosition = "D4"
+    endPosition = "D3"
     moveNumber = 2
 
     move = "$startPosition-$endPosition; $moveNumber"
