@@ -17,13 +17,13 @@ fun main() {
     println(move)
 */
     val move1 = Move("E2", "E4", 1)
-    val move2 = Move("D2", "D4", 2)
+    val move2 = Move("D2", "D3", 2)
 
     println(move1)
     println(move2)
 }
 
-class Move(val startPosition: String, val endPosition: String, val moveNumber: Int)
+class Move(private val startPosition: String, private val endPosition: String, private val moveNumber: Int)
 {
     override fun toString(): String {
         return "$startPosition-$endPosition; $moveNumber"
