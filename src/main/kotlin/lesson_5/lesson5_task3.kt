@@ -7,8 +7,8 @@ fun main() {
 
     println("Введите два числа")
 
-    val userFirstNumber = readLine()?.toIntOrNull()
-    val userSecondNumber = readLine()?.toIntOrNull()
+    val userFirstNumber = readln().toIntOrNull()
+    val userSecondNumber = readln().toIntOrNull()
 
     if (userFirstNumber == firstNumber && userSecondNumber == secondNumber) {
         println("Вы угадали!")
