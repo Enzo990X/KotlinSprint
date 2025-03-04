@@ -17,6 +17,8 @@ fun main() {
         (index >= 25) && (index < 30) -> println("Избыточная масса тела")
         else -> println("Ожирение")
     }
+
+    println("Индекс массы тела: ${String.format("%.2f", index)}")
 }
 
 const val CM_IN_M = 100
