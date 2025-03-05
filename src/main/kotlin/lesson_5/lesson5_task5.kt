@@ -7,21 +7,19 @@ fun main() {
     val firstNumber = Random.nextInt(43)
     val secondNumber = Random.nextInt(43)
     val thirdNumber = Random.nextInt(43)
+    val generatedNumbers = listOf(firstNumber, secondNumber, thirdNumber)
 
     println("Введите три числа от 0 до 42")
     val enteredNumber1 = readln().toInt()
     val enteredNumber2 = readln().toInt()
     val enteredNumber3 = readln().toInt()
+    val enteredNumbers = listOf(enteredNumber1, enteredNumber2, enteredNumber3)
 
-    val compareNumber1 = firstNumber == enteredNumber1 || firstNumber == enteredNumber2 || firstNumber == enteredNumber3
-    val compareNumber2 =
-        secondNumber == enteredNumber2 || secondNumber == enteredNumber1 || secondNumber == enteredNumber3
-    val compareNumber3 = thirdNumber == enteredNumber3 || thirdNumber == enteredNumber1 || thirdNumber == enteredNumber2
+    val lottery = generatedNumbers.intersect(enteredNumbers.toSet())
 
-    val jackpot = compareNumber1 && compareNumber2 && compareNumber3
-    val halfPot =
-        compareNumber1 && compareNumber2 || compareNumber2 && compareNumber3 || compareNumber1 && compareNumber3
-    val niceTry = compareNumber1 || compareNumber2 || compareNumber3
+    val jackpot = lottery.size == 3
+    val halfPot = lottery.size == 2
+    val niceTry = lottery.size == 1
 
     println(
         when {
