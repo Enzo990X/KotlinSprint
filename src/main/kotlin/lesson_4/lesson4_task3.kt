@@ -15,7 +15,6 @@ fun main() {
     val compareConditions = compareSky && compareTent && compareHumidity && compareSeason
 
     println("Благоприятные ли условия сейчас для роста бобовых? $compareConditions")
-
 }
 
 const val REQUIRED_SKY_IS_CLEAR = true
