@@ -7,8 +7,8 @@ fun main() {
     val currentHumidity = 20
     val currentSeason = "winter"
 
-    val compareSky = REQUIRED_SKY_IS_CLEAR == isSkyClear
-    val compareTent = REQUIRED_TENT_IS_OPEN == isTentOpen
+    val compareSky = IS_REQUIRED_SKY_CLEAR == isSkyClear
+    val compareTent = IS_REQUIRED_TENT_OPEN == isTentOpen
     val compareHumidity = REQUIRED_HUMIDITY == currentHumidity
     val compareSeason = REQUIRED_SEASON != currentSeason
 
@@ -17,8 +17,8 @@ fun main() {
     println("Благоприятные ли условия сейчас для роста бобовых? $compareConditions")
 }
 
-const val REQUIRED_SKY_IS_CLEAR = true
-const val REQUIRED_TENT_IS_OPEN = true
+const val IS_REQUIRED_SKY_CLEAR = true
+const val IS_REQUIRED_TENT_OPEN = true
 const val REQUIRED_HUMIDITY = 20
 const val REQUIRED_SEASON = "winter"
 
