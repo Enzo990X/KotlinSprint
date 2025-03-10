@@ -6,8 +6,7 @@ fun main() {
     var i = getTime
 
     while (i <= getTime) {
-
-        println("${i--} секунд до конца")
+        i--
         Thread.sleep(1000)
         if (i == 0) break
     }
