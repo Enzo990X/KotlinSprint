@@ -1,7 +1,6 @@
 package org.example.lesson_2
 
 fun main() {
-
     val buffGainPercentage = 20
     val crystalOreExtractedQuantity = 7
     val ironOreExtractedQuantity = 11
