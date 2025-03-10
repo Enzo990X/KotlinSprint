@@ -15,5 +15,5 @@ fun main() {
 }
 
 
-const val TOTAL_PERCENTAGE = 100
+private const val TOTAL_PERCENTAGE = 100
 const val SUMMAND = 1
