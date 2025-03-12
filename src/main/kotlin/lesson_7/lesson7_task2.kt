@@ -1,19 +1,20 @@
 package org.example.lesson_7
 
 fun main() {
-    var code = (1000..9999).random()
+    val codeRange = RANGE_START..RANGE_END
+    var code = codeRange.random()
     println("Ваш код авторизации: $code.\nВведите код.")
 
-        var getCode = readln().toInt()
+    var getCode = readln().toInt()
 
     while (getCode != code) {
         println("Ошибка.\n")
-        code = (1000..9999).random()
+        code = codeRange.random()
         println("Новый код авторизации: $code.\nВведите код.")
         getCode = readln().toInt()
     }
-    println ("Добро пожаловать!")
-
+    println("Добро пожаловать!")
 }
 
-
+private const val RANGE_START = 1000
+private const val RANGE_END = 9999
