@@ -15,9 +15,9 @@ fun main() {
     }
 
     if (isPresent) {
-        println("В рецепте есть $userIngredient")
+        println("Ингредиент $userIngredient в рецепте есть")
     }
     else {
-        println("В рецепте нет $userIngredient")
+        println("Такого ингредиента в рецепте нет")
     }
 }
