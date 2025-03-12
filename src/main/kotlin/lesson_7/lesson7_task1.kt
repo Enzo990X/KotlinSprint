@@ -1,17 +1,22 @@
 package org.example.lesson_7
 
 fun main() {
-    val symbol = (0..9).random()
-    val smallChar = ('a'..'z').random()
-    val bigChar = ('A'..'Z').random()
+    var symbol = (0..9).random()
+    var smallChar = ('a'..'z').random()
+    var bigChar = ('A'..'Z').random()
 
-    val symbol1 = listOf(symbol, smallChar, bigChar).random()
-    val symbol2 = listOf(symbol, smallChar, bigChar).random()
-    val symbol3 = listOf(symbol, smallChar, bigChar).random()
-    val symbol4 = listOf(symbol, smallChar, bigChar).random()
-    val symbol5 = listOf(symbol, smallChar, bigChar).random()
-    val symbol6 = listOf(symbol, smallChar, bigChar).random()
+    val range = RANGE_START..RANGE_END
+    var passwordChar = listOf(symbol, smallChar, bigChar).random()
 
-    println("$symbol1" + "$symbol2" + "$symbol3" + "$symbol4" + "$symbol5" + "$symbol6")
-
+    print("Ваш пароль: ")
+    for (i in range) {
+        print("$passwordChar")
+        symbol = (0..9).random()
+        smallChar = ('a'..'z').random()
+        bigChar = ('A'..'Z').random()
+        passwordChar = listOf(symbol, smallChar, bigChar).random()
+    }
 }
+
+private const val RANGE_START = 0
+private const val RANGE_END = 6
