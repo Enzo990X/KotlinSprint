@@ -10,5 +10,4 @@ fun main() {
     print("Список ингредиентов: " + listOfIngredients.joinToString() + ".\n")
 }
 
-
 private const val NUMBER_OF_INGREDIENTS = 5
