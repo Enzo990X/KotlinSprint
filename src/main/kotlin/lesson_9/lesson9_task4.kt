@@ -2,16 +2,13 @@ package org.example.lesson_9
 
 fun main() {
 
-    val listOfIngredients = mutableListOf<String>()
-
-    repeat(NUMBER_OF_INGREDIENTS) {
+    val listOfIngredients = (1..NUMBER_OF_INGREDIENTS).map {
         println("Введите ингредиент:")
-        val ingredient = readln()
-        listOfIngredients.add(ingredient)
-    }
+        readln()
+    }.sorted()
 
-    listOfIngredients.sort()
     print("Список ингредиентов: " + listOfIngredients.joinToString() + ".\n")
 }
+
 
 private const val NUMBER_OF_INGREDIENTS = 5
