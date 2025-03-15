@@ -6,29 +6,22 @@ fun main() {
     askForNewGame()
 }
 
-fun rollDice() = (MIN_VALUE..MAX_VALUE).random()
-
-fun rollByBot(): Int {
-    println("Ход компьютера: ")
-    val botRoll = rollDice()
+fun rollDice() : Int {
+    val rollResult = (MIN_VALUE..MAX_VALUE).random()
     Thread.sleep(SLEEP)
-    println("$botRoll")
+    println("$rollResult")
     Thread.sleep(SLEEP)
-    return botRoll
+    return rollResult
 }
 
-fun rollByPlayer(): Int {
-    println("Ход игрока: ")
-    val playerRoll = rollDice()
-    Thread.sleep(SLEEP)
-    println("$playerRoll")
-    Thread.sleep(SLEEP)
-    return playerRoll
-}
 
 fun playGame() {
-    val botRoll = rollByBot()
-    val playerRoll = rollByPlayer()
+    println("Ход компьютера: ")
+    Thread.sleep(SLEEP)
+    val botRoll = rollDice()
+    println("Ход игрока: ")
+    Thread.sleep(SLEEP)
+    val playerRoll = rollDice()
     when {
         botRoll == playerRoll -> {
             println("Ничья!")
