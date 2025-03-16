@@ -16,8 +16,9 @@ fun main() {
 fun generatePassword(passwordSize: Int): String {
     val numberRange = FIRST_NUMBER..LAST_NUMBER
     var number: Int
-    val symbolRange = setOf ('!', '#', '$', '%', '&', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
-        '?', '@', '[', ']', '^', '`', '{', '|', '}', '~')
+    val symbolRange = (33..47).map { it.toChar() }.toCharArray() +
+            (58..64).map { it.toChar() }.toCharArray() + (91..96).map { it.toChar() }.toCharArray() +
+            (123..126).map { it.toChar() }.toCharArray()
     var symbol: Char
 
     val range = RANGE_START..passwordSize
