@@ -13,7 +13,11 @@ fun main() {
     user2.getUserBio()
 }
 
-private class User2(val id: Int, val name: String, var password: String, val email: String, var bio: String = "") {
+private class User2(val id: Int,
+                    val name: String,
+                    var password: String,
+                    val email: String,
+                    var bio: String = "",) {
 
     fun printData() {
         println("Введите имя пользователя: ")
