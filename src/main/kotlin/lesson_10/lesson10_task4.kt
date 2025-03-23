@@ -6,7 +6,7 @@ fun main() {
     askForNewGame()
 }
 
-fun rollDice() : Int {
+private fun rollDice() : Int {
     val rollResult = (MIN_VALUE..MAX_VALUE).random()
     Thread.sleep(SLEEP)
     println("$rollResult")
@@ -15,7 +15,7 @@ fun rollDice() : Int {
 }
 
 
-fun playGame() {
+private fun playGame() {
     println("Ход компьютера: ")
     Thread.sleep(SLEEP)
     val botRoll = rollDice()
@@ -36,7 +36,7 @@ fun playGame() {
     }
 }
 
-fun askForNewGame() {
+private fun askForNewGame() {
     println("\nХотите сыграть ещё? (да/нет)")
     val answer = readln()
     if (answer == "да") {
@@ -46,7 +46,7 @@ fun askForNewGame() {
     else endGame()
 }
 
-fun endGame() {
+private fun endGame() {
     when (winsCount) {
         ONE -> print("\nВы выиграли $winsCount раз!")
         in TWO..FOUR -> print("\nВы выиграли $winsCount раза!")
