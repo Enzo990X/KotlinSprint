@@ -22,7 +22,7 @@ fun main() {
     }
 }
 
-fun rollDice() = (MIN_VALUE..MAX_VALUE).random()
+private fun rollDice() = (MIN_VALUE..MAX_VALUE).random()
 
 private const val MIN_VALUE = 1
 private const val MAX_VALUE = 6
