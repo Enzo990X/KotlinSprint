@@ -32,12 +32,6 @@ private class Room(
 
     fun showUserName(user: User3) {
         println("Имя пользователя: " + user.userName)
-        /*
-        userImage.setOnLongClickListener {
-            Toast.makeText(this, "${user.userName}", Toast.LENGTH_SHORT).show()
-            true
-        }
-         */
     }
 
     fun muteParticipant(): Boolean {
@@ -98,65 +92,3 @@ private fun checkMic(): Boolean {
         return false
     }
 }
-
-
-/*
-Потратил время пытаясь написать реальный код
-
-private val isSpeaking = MutableLiveData<Boolean>()
-val userIsSpeaking: LiveData<Boolean> = isSpeaking
-
-private fun checkForSpeech() {
-    CoroutineScope(Dispatchers.IO).launch {
-        val audioRecord = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            44100,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT,
-            1024
-        )
-        audioRecord.startRecording()
-        val buffer = ShortArray(1024)
-        audioRecord.read(buffer, 0, 1024)
-        audioRecord.stop()
-        audioRecord.release()
-
-        val rms = calculateRMS(buffer)
-
-        isSpeaking.postValue(rms > THRESHOLD_VALUE)
-    }
-}
-
-val currentUserStatus: LiveData<String> = Transformations.map(isSpeaking) { isSpeaking ->
-    if (isSpeaking) "Говорит" else "Слушает"
-}
-
-private suspend fun changeStatus(userName: String, userStatus: String) {
-    var currentUserStatus = userStatus
-
-    val deferredResult = CoroutineScope(Dispatchers.IO).async {
-        val isSpeaking = checkForSpeech()
-        return@async when {
-            isSpeaking -> "Говорит"
-            checkForMicOff() -> "Микрофон выключен"
-            checkForMute() -> "Заглушен"
-            else -> "Слушает"
-        }
-    }
-
-    val result = deferredResult.await()
-    currentUserStatus = result
-
-    println(currentUserStatus)
-}
-
-private fun calculateRMS(buffer: ShortArray): Double {
-    var sum = 0.0
-    for (value in buffer) {
-        sum += value.toDouble() * value.toDouble()
-    }
-    return sqrt(sum / buffer.size)
-}
-
-const val THRESHOLD_VALUE = 1000
- */
