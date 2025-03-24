@@ -1,15 +1,15 @@
 package org.example.lesson_12
 
 fun main() {
-    val mondayWeather = DailyWeather2(dayTemp = 280, nightTemp = 274, fallout = true)
+    val mondayWeather = DailyWeather3(dayTemp = 280, nightTemp = 274, fallout = true)
 
-    val tuesdayWeather = DailyWeather2(dayTemp = 283, nightTemp = 270, fallout = false)
+    val tuesdayWeather = DailyWeather3(dayTemp = 283, nightTemp = 270, fallout = false)
 
     mondayWeather.showDailyWeather()
     tuesdayWeather.showDailyWeather()
 }
 
-class DailyWeather2 (dayTemp: Int, nightTemp: Int, fallout: Boolean)
+class DailyWeather3 (dayTemp: Int, nightTemp: Int, fallout: Boolean)
 {
     var dayTemp = dayTemp
     var nightTemp = nightTemp
@@ -25,4 +25,4 @@ class DailyWeather2 (dayTemp: Int, nightTemp: Int, fallout: Boolean)
     }
 }
 
-const val KELVIN = 273.1F
+private const val KELVIN = 273.1F
