@@ -11,14 +11,14 @@ fun main() {
 
 class DailyWeather3 (dayTemp: Int, nightTemp: Int, fallout: Boolean)
 {
-    var dayTemp = dayTemp
-    var nightTemp = nightTemp
+    var dayTemp = (dayTemp- KELVIN).toInt()
+    var nightTemp = (nightTemp - KELVIN).toInt()
     var fallout = fallout
 
     fun showDailyWeather() {
 
-        println("Дневная температура: ${(dayTemp - KELVIN).toInt()}, " +
-                "ночная температура: ${(nightTemp - KELVIN).toInt()}.")
+        println("Дневная температура: $dayTemp, " +
+                "ночная температура: $nightTemp.")
 
         if (fallout) println("Ожидаются осадки.")
         else println("Осадки не ожидаются.")
