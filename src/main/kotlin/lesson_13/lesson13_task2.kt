@@ -10,7 +10,6 @@ private class Phonebook (val fullName: String, val phoneNumber: Long, val compan
 
     fun printRecord() {
 
-        if (companyName == null) println("ФИО: $fullName\nНомер телефона: $phoneNumber\nМесто работы: <не указано>")
-        else println("ФИО: $fullName\nНомер телефона: $phoneNumber\nМесто работы: $companyName")
+        println("ФИО: $fullName\nНомер телефона: $phoneNumber\nМесто работы: ${companyName ?: "<не указано>"}")
     }
 }
