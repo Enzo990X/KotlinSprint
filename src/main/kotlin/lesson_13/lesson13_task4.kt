@@ -7,11 +7,13 @@ fun main() {
     newContact.addNewContact()
     phonebookList.add(newContact)
 
-    if (phonebookList[0].companyName == null) println("ФИО: ${phonebookList[0].fullName}\n" +
-                "Номер телефона: ${phonebookList[0].phoneNumber}\nМесто работы: <не указано>")
-    else println(
-        "ФИО: ${phonebookList[0].fullName}\nНомер телефона: ${phonebookList[0].phoneNumber}" +
-                "\nМесто работы: ${phonebookList[0].companyName}")
+    for (i in phonebookList.indices) {
+
+        if (phonebookList[i].companyName == null) println("ФИО: ${phonebookList[0].fullName}\n" +
+                    "Номер телефона: ${phonebookList[i].phoneNumber}\nМесто работы: <не указано>")
+        else println(            "ФИО: ${phonebookList[i].fullName}\nНомер телефона: ${phonebookList[i].phoneNumber}" +
+                    "\nМесто работы: ${phonebookList[i].companyName}")
+    }
 }
 
 private class Phonebook(var fullName: String, var phoneNumber: Long?, var companyName: String?) {
@@ -29,6 +31,6 @@ private class Phonebook(var fullName: String, var phoneNumber: Long?, var compan
 
         println("Введите место работы: ")
         companyName = readln()
-        if (companyName == "") companyName = null
+        if (companyName!!.isEmpty()) companyName = null
     }
 }
