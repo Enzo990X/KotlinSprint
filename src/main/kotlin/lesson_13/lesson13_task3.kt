@@ -16,8 +16,7 @@ fun main() {
 
     println("Список компаний:")
     for (company in companyList) {
-        if (company == null) println("<не указано>")
-        else println(company)
+        println(company ?: "<не указано>")
     }
 }
 
