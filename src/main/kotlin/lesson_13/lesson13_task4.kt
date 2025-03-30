@@ -7,12 +7,9 @@ fun main() {
     newContact.addNewContact()
     phonebookList.add(newContact)
 
-    for (i in phonebookList.indices) {
-
-        if (phonebookList[i].companyName == null) println("ФИО: ${phonebookList[0].fullName}\n" +
-                    "Номер телефона: ${phonebookList[i].phoneNumber}\nМесто работы: <не указано>")
-        else println(            "ФИО: ${phonebookList[i].fullName}\nНомер телефона: ${phonebookList[i].phoneNumber}" +
-                    "\nМесто работы: ${phonebookList[i].companyName}")
+    phonebookList.forEach {
+        println("ФИО: ${it.fullName}\nНомер телефона: ${it.phoneNumber}\n" +
+                "Место работы: ${it.companyName ?: "<не указано>"}")
     }
 }
 
