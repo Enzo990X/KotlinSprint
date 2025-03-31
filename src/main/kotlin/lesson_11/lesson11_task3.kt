@@ -1,94 +1,82 @@
 package org.example.lesson_11
 
 import java.io.File
+import java.security.SecureRandom
+
 
 fun main() {
 
-    val room = Room(0, "Чердак", File("/path/to/image.jpg"), mutableListOf())
-    val user = User3(0, "Иван Иванов", File("/path/to/image.jpg"), "Слушает")
+    val room = Room(0, "Чердак", File("/path/to/image.jpg"))
+    val user = User3(0, "Иван Иванов", "", File("/path/to/image.jpg"))
 
-    room.addParticipant(user.userId, user.userName, user.userImage, user.userStatus)
-
+    room.addParticipant(user)
     room.showUserName(user)
+    println(user.getUserStatus(room))
 
-    println(user.userStatus)
+    user.isSpeaking = true
+    println(user.getUserStatus(room))
 
-    showUserStatus(user, room)
-    println(user.userStatus)
+    user.isSpeaking = false
+    user.isMicOn = true
+    println(user.getUserStatus(room))
 
+    user.isMicOn = false
+    room.isUserMuted = true
+    println(user.getUserStatus(room))
 }
 
 private class Room(
     val roomId: Int,
     val roomName: String,
     val roomImage: File = File("/path/to/image.jpg"),
-    val roomParticipants: MutableList<Int>,
 ) {
 
-    fun addParticipant(userId: Int, userName: String, userImage: File, userStatus: String) {
-        roomParticipants.add(userId)
-        println("$userName вошёл в комнату $roomName")
+    private val userSessions = mutableMapOf<Int, MutableList<UserSession>>()
+
+    fun generateSessionId(): String {
+        val random = SecureRandom()
+        val bytes = ByteArray(BYTES)
+        random.nextBytes(bytes)
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
+    fun addParticipant(user: User3) {
+        val newSessionId = generateSessionId()
+        val userSessionsList = userSessions.getOrPut(user.userId) { mutableListOf() }
+        userSessionsList.add(UserSession(user.userId, newSessionId))
+        user.sessionId = newSessionId
+        println("${user.userName} вошёл в комнату $roomName.")
     }
 
     fun showUserName(user: User3) {
         println("Имя пользователя: " + user.userName)
     }
 
-    fun muteParticipant(): Boolean {
-
-        var isUserMuted = false
-        //код проверки кнопки заглушения в комнате для конкретного пользователя
-
-        if (isUserMuted) {
-            return true
-        } else {
-            return false
-        }
-    }
+    var isUserMuted = false
 }
 
 private class User3(
     val userId: Int,
     val userName: String,
+    var sessionId: String,
     var userImage: File = File("/path/to/image.jpg"),
-    var userStatus: String,
-)
+    var isSpeaking: Boolean = false,
+    var isMicOn: Boolean = false,
+) {
+    val userStatus: List<Boolean>
+        get() = listOf(isSpeaking, isMicOn, false)
 
-private fun showUserStatus(user: User3, room: Room): String {
-    val isSpeaking = checkForSpeech()
-    val isMicOn = checkMic()
-    val isUserMuted = room.muteParticipant()
-
-    user.userStatus = when {
-        isSpeaking -> "Говорит"
-        isMicOn -> "Микрофон выключен"
-        isUserMuted -> "Заглушен"
-        else -> "Слушает"
-    }
-
-    return user.userStatus
-}
-
-private fun checkForSpeech(): Boolean {
-
-    var isSpeaking = true
-    //код проверки наличия речи в комнате для конкретного пользователя
-
-    if (isSpeaking) {
-        return true
-    } else {
-        return false
+    fun getUserStatus(room: Room): String {
+        val userStatus = listOf(isSpeaking, isMicOn, room.isUserMuted)
+        return when {
+            userStatus[0] -> "Говорит"
+            userStatus[1] -> "Микрофон выключен"
+            userStatus[2] -> "Пользователь заглушен"
+            else -> "Слушает"
+        }
     }
 }
 
-private fun checkMic(): Boolean {
+class UserSession(val userId: Int, val sessionId: String)
 
-    var isMicOn = false
-    //код проверки наличия микрофона в комнате для конкретного пользователя
-
-    if (isMicOn) {
-        return true
-    } else {
-        return false
-    }
-}
+private const val BYTES = 16
