@@ -1,9 +1,9 @@
 package org.example.lesson_13
 
 fun main() {
-    val phonebookList = mutableListOf<Phonebook>()
+    val phonebookList = mutableListOf<Phonebook4>()
 
-    val newContact = Phonebook("", null, "")
+    val newContact = Phonebook4("", null, "")
     newContact.addNewContact()
     phonebookList.add(newContact)
 
@@ -13,7 +13,7 @@ fun main() {
     }
 }
 
-private class Phonebook(var fullName: String, var phoneNumber: Long?, var companyName: String?) {
+class Phonebook4(var fullName: String, var phoneNumber: Long?, var companyName: String?) {
 
     fun addNewContact() {
         println("Введите ФИО: ")
