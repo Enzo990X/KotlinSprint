@@ -1,22 +1,19 @@
 package org.example.lesson_13
 
 fun main() {
-    val phonebookList = mutableListOf<Phonebook>()
+    val phonebookList = mutableListOf<Phonebook5>()
 
-    val newContact = Phonebook("", "", "")
+    val newContact = Phonebook5("", "", "")
     newContact.addNewContact()
     phonebookList.add(newContact)
 
-    for (i in phonebookList.indices) {
-
-        if (phonebookList[i].companyName == null) println("ФИО: ${phonebookList[0].fullName}\n" +
-                "Номер телефона: ${phonebookList[i].phoneNumber}\nМесто работы: <не указано>")
-        else println(            "ФИО: ${phonebookList[i].fullName}\nНомер телефона: ${phonebookList[i].phoneNumber}" +
-                "\nМесто работы: ${phonebookList[i].companyName}")
+    phonebookList.forEach { phonebook ->
+        println("ФИО: ${phonebook.fullName}\nНомер телефона: ${phonebook.phoneNumber}")
+        println("Место работы: ${phonebook.companyName ?: "<не указано>"}")
     }
 }
 
-private class Phonebook(var fullName: String, var phoneNumber: String, var companyName: String?) {
+private class Phonebook5(var fullName: String, var phoneNumber: String, var companyName: String?) {
 
     fun addNewContact() {
         println("Введите ФИО: ")
