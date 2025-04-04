@@ -28,6 +28,6 @@ class Phonebook4(var fullName: String, var phoneNumber: Long?, var companyName: 
 
         println("Введите место работы: ")
         companyName = readln()
-        if (companyName!!.isEmpty()) companyName = null
+        companyName = companyName?.takeUnless { it.isEmpty() }
     }
 }
