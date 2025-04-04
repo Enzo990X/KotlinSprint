@@ -34,10 +34,9 @@ private class Phonebook5(var fullName: String, var phoneNumber: String, var comp
 
         phoneNumber.toLong()
 
-
         println("Введите место работы: ")
         companyName = readln()
-        if (companyName!!.isEmpty()) companyName = null
+        companyName?.takeUnless { it.isEmpty() }
     }
 }
 
