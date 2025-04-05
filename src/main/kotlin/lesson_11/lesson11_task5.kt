@@ -3,25 +3,32 @@ package org.example.lesson_11
 fun main() {
 
     val forumBuilder = Forum.Builder()
-    println("Добро пожаловать на форум ${forumBuilder.name}!")
+    println("Добро пожаловать на форум ${forumBuilder.name}!\n")
 
+    askForNewUser(forumBuilder)
+    askForNewPost(forumBuilder)
+
+    forumBuilder.printThread()
+}
+
+fun askForNewUser(forumBuilder: Forum.Builder) {
     println("Хотите создать нового пользователя?")
     var answerAboutNewUser = readln()
+
     while (answerAboutNewUser == "Да" || answerAboutNewUser == "да") {
 
         println("Введите имя пользователя: ")
         val name = readln()
-        println("Введите дату рождения пользователя: ")
-        val birthday = readln()
-        println("Введите описание пользователя: ")
-        val description = readln()
-        forumBuilder.createNewUser(name, birthday, description)
+        forumBuilder.createNewUser(name)
         println("\nХотите создать нового пользователя?")
         answerAboutNewUser = readln()
     }
+}
 
-    println("Хотите написать новый пост?")
+fun askForNewPost(forumBuilder: Forum.Builder) {
+    println("\nХотите написать новый пост?")
     var answerAboutNewPost = readln()
+
     while (answerAboutNewPost == "Да" || answerAboutNewPost == "да") {
 
         println("Введите имя пользователя: ")
@@ -30,7 +37,7 @@ fun main() {
         while (userId == null) {
             val user = forumBuilder.users.find { it.name == userName }
             if (user != null) {
-                userId = user.newUserId
+                userId = user.userId
             } else {
                 println("Пользователь не найден. Повторите попытку.")
                 userName = readln()
@@ -40,45 +47,51 @@ fun main() {
         println("Введите текст поста: ")
         val message = forumBuilder.createNewMessage(text = readln(), userId = userId)
 
-        println("Хотите написать новый пост?")
+        println("\nХотите написать новый пост?")
         answerAboutNewPost = readln()
     }
-
-    println(forumBuilder.printThread(forumBuilder.users, forumBuilder.messages))
 }
 
-
-private class Forum(
+class Forum(
     val name: String,
     val users: MutableList<ForumUser> = mutableListOf(),
     val messages: MutableList<Message> = mutableListOf(),
+) {
 
-    ) {
+    companion object {
+        var userId: Int = 0
+        var messageId: Int = 0
+    }
 
     class Builder {
         var name: String = "Песочница"
         val users: MutableList<ForumUser> = mutableListOf()
         val messages: MutableList<Message> = mutableListOf()
 
-        fun createNewUser(name: String, dateOfBirth: String, bio: String = ""): ForumUser {
-            val user = ForumUser(name, dateOfBirth, bio)
+        fun createNewUser(name: String): ForumUser {
+
+            if (users.any { it.name == name }) {
+                println("Пользователь с таким именем уже существует.")
+                return ForumUser(name, userId)
+            }
+
+            val newUserId = userId++
+            val user = ForumUser(name, newUserId)
             users.add(user)
             return user
         }
 
         fun createNewMessage(text: String, userId: Int): Message {
-            Message.messageId++
-            val message = Message(text, userId, Message.messageId)
-            messages.add(message)
-            return message
+            val newMessageId = messageId++
+            val newMessage = Message(text, userId, newMessageId)
+            messages.add(newMessage)
+            return newMessage
         }
 
-        fun printThread(users: List<ForumUser>, messages: MutableList<Message>): String {
-            return messages.joinToString("\n") { message ->
-                "${users.first { it.newUserId == message.userId }.name}: ${message.text}"
-            }
+        fun printThread() {
+            println(messages.joinToString("\n") { message ->
+                "${users.first { users -> users.userId == message.userId }.name}: ${message.text}" })
         }
-
 
         fun setName(name: String): Builder {
             this.name = name
@@ -91,25 +104,13 @@ private class Forum(
     }
 }
 
-
 class ForumUser(
     val name: String,
-    val dateOfBirth: String,
-    var bio: String = "",
-) {
-    companion object {
-        var userId: Int = 0
-    }
-
-    val newUserId: Int = userId++
-}
+    val userId: Int,
+)
 
 class Message(
     var text: String = "",
     var userId: Int,
     var messageId: Int,
-) {
-    companion object {
-        var messageId: Int = 0
-    }
-}
+)
