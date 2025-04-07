@@ -1,8 +1,8 @@
 package org.example.lesson_17
 
 fun main() {
-    val folder1 = Folder("Папка", 10, true)
-    val folder2 = Folder("Папка", 5, false)
+    val folder1 = Folder(true, "Папка", 10 )
+    val folder2 = Folder(false, "Папка", 5 )
 
     println(folder1.name)
     println(folder1.numberOfFiles)
@@ -10,14 +10,15 @@ fun main() {
     println(folder2.numberOfFiles)
 }
 
-class Folder(var name: String, var numberOfFiles: Int, private val secret: Boolean) {
+class Folder(private val secret: Boolean, name: String, numberOfFiles: Int) {
 
-    init {
-        if (this.secret) {
-            this.name = "Скрытая папка"
-            this.numberOfFiles = SECRET_NUMBER_OF_FILES
-        }
-    }
+    var name: String = name
+        get() = if (this.secret) "Скрытая папка"
+        else field
+
+    var numberOfFiles: Int = numberOfFiles
+        get() = if (this.secret) SECRET_NUMBER_OF_FILES
+        else field
 }
 
 private const val SECRET_NUMBER_OF_FILES = 0
