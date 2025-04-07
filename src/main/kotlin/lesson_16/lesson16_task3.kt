@@ -4,18 +4,15 @@ fun main() {
     val user = User("user", "password")
 
     println("Введите пароль:")
-    if (checkPassword(user, readln()))
+    if (user.checkPassword(readln()))
         println("\nПароль верный.")
     else
         println("\nПароль неверный.")
 }
 
-
-fun checkPassword(user: User, password: String): Boolean {
-    return user.getPassword() == password
-}
-
 class User (val name: String, private val password: String) {
 
-    fun getPassword(): String = password
+    fun checkPassword(password: String): Boolean {
+        return this.password == password
+    }
 }
