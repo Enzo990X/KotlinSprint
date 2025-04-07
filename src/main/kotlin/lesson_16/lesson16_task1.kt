@@ -1,14 +1,12 @@
 package org.example.lesson_16
 
-import kotlin.random.Random
-
 fun main() {
 
     val cube = Cube()
     println(cube.getSide())
 }
 
-class Cube(private var side: Short = Random.Default.nextInt(MIN_VALUE, MAX_VALUE).toShort()) {
+class Cube(private var side: Short = (MIN_VALUE.. MAX_VALUE).random().toShort()) {
 
     fun getSide() = side
 }
