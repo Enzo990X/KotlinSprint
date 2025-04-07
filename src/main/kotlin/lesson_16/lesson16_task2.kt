@@ -1,12 +1,13 @@
 package org.example.lesson_16
 
+import kotlin.math.pow
+
 fun main() {
     val circle = Circle(5.0f)
 
     println(circle.perimeter())
     println(circle.area())
 }
-
 
 class Circle(private val radius: Float) {
 
@@ -17,7 +18,7 @@ class Circle(private val radius: Float) {
     }
 
     fun area(): Float {
-        return Pi * radius * radius
+        return Pi * radius.pow(MULTIPLIER)
     }
 }
 
