@@ -8,26 +8,33 @@ fun main() {
         )
     )
 
-    instrument.searchForAccessories(instrument)
+    instrument.search()
 }
 
 interface Searchable {
-    fun searchForAccessories(instrument: Instrument) {
-        println("Выполняется аксессуаров для инструмента ${instrument.name}...\n")
+    fun search()
+}
+
+abstract class Item(val name: String, val quantity: Int) : Searchable
+
+class Instrument(name: String, quantity: Int, val accessories: List<Accessory>) : Item(name, quantity) {
+
+    override fun search() {
+        println("Выполняется аксессуаров для инструмента $name...\n")
         Thread.sleep(SLEEP)
 
-        val accessories = instrument.accessories
-        println("Для инструмента ${instrument.name} доступны следующие аксессуары:")
+        val accessories = accessories
+        println("Для инструмента $name доступны следующие аксессуары:")
         accessories.forEach {
             println(it.name)
         }
     }
 }
 
-abstract class Item(val name: String, val quantity: Int) : Searchable
-
-class Instrument(name: String, quantity: Int, val accessories: List<Accessory>) : Item(name, quantity)
-
-class Accessory(name: String, quantity: Int) : Item(name, quantity)
+class Accessory(name: String, quantity: Int) : Item(name, quantity) {
+    override fun search() {
+        println("Выполняется поиск инструментов, для которых подходит аксессуар $name...")
+    }
+}
 
 private const val SLEEP = 1000L
