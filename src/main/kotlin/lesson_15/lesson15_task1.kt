@@ -1,16 +1,17 @@
 package org.example.lesson_15
 
-abstract class Animal : Movable, Flyable
-
-abstract class Carp () : Animal() {
+abstract class Carp () : Swimable {
     override fun swim() {
-        println("Карп плавает с помощью хвоста и плавников")
+        println("Карась плавает с помощью хвоста и плавников")
     }
 }
 
-abstract class Seagull () : Animal() {
+abstract class Seagull () : Movable, Flyable {
     override fun walk() {
         println("Чайка ходит с помощью ног")
+    }
+    override fun stay() {
+        println("Чайка стоит на ногах")
     }
     override fun takeOff() {
         println("Чайка взлетает с помощью крыльев")
@@ -26,12 +27,15 @@ abstract class Seagull () : Animal() {
     }
 }
 
-abstract class Duck () : Animal() {
+abstract class Duck () : Swimable, Movable, Flyable {
     override fun swim() {
         println("Утка плавает с помощью ног")
     }
     override fun walk() {
         println("Утка ходит с помощью ног")
+    }
+    override fun stay() {
+        println("Утка стоит на ногах")
     }
     override fun takeOff() {
         println("Утка взлетает с помощью крыльев")
@@ -47,9 +51,13 @@ abstract class Duck () : Animal() {
     }
 }
 
-interface Movable {
+interface Swimable {
     fun swim()
-    fun walk()
+}
+
+interface Movable {
+     fun walk()
+     fun stay()
 }
 
 interface Flyable {
