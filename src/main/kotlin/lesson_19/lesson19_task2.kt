@@ -11,15 +11,9 @@ fun main() {
 }
 
 enum class Categories(val categoryId: Int) {
-    CLOTHES(1) {
-        override fun getName(): String = "Одежда"
-    },
-    STATIONARY(2) {
-        override fun getName(): String = "Канцтовары"
-    },
-    OTHER(3) {
-        override fun getName(): String = "Прочее"
-    };
+    CLOTHES(1) { override fun getName(): String = "Одежда" },
+    STATIONARY(2) { override fun getName(): String = "Канцтовары" },
+    OTHER(3) { override fun getName(): String = "Прочее" };
 
     abstract fun getName(): String
 }
