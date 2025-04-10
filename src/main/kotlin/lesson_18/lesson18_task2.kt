@@ -10,7 +10,8 @@ fun main() {
     diceList.forEach { it.rollDice(it.numberOfSides) }
 }
 
-open class Dice(val numberOfSides: Int) {
+open class Dice {
+    open val numberOfSides: Int = 0
 
     fun rollDice(numberOfSides: Int) {
 
@@ -19,9 +20,17 @@ open class Dice(val numberOfSides: Int) {
     }
 }
 
-class D4 : Dice(MAX_VALUE_FOUR_SIDES)
-class D6 : Dice(MAX_VALUE_SIX_SIDES)
-class D8 : Dice(MAX_VALUE_EIGHT_SIDES)
+class D4 : Dice() {
+    override val numberOfSides = MAX_VALUE_FOUR_SIDES
+}
+
+class D6 : Dice() {
+    override val numberOfSides = MAX_VALUE_SIX_SIDES
+}
+
+class D8 : Dice() {
+    override val numberOfSides = MAX_VALUE_EIGHT_SIDES
+}
 
 private const val MIN_VALUE = 1
 private const val MAX_VALUE_FOUR_SIDES = 4
