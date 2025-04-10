@@ -20,7 +20,11 @@ class CubicParcel(val side: Float) : Parcel() {
     }
 }
 
-class ParallelepipedParcel(val length: Float, val width: Float, val height: Float) : Parcel() {
+class ParallelepipedParcel(
+    val length: Float,
+    val width: Float,
+    val height: Float
+) : Parcel() {
     override fun area(): Float {
         return TWO * (length * width + length * height + width * height)
     }
