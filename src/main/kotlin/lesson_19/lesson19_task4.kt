@@ -1,18 +1,17 @@
 package org.example.lesson_19
 
 fun main() {
-    val tank = Tank(Ammunition.BLUE)
+    val tank = Tank()
 
-    println("В Вашем орудии заряжен ${tank.ammunition.getName()} боеприпас. Хотите его заменить?")
-    val answer = readln()
-    if (answer == "да") tank.swapAmmunition()
+    println("Орудие не заряжено.")
+    tank.swapAmmunition()
 
     println("\nПриступаем к стрельбам.")
     while (true) {
         tank.fire()
-        Tank.totalDamage += tank.ammunition.getDamage()
+        Tank.totalDamage += tank.ammunition!!.damage
 
-        println("\nХотите продолжить стрельбу?")
+        println("Хотите продолжить стрельбу?")
         var answer = readln()
 
         if (answer == "да") {
@@ -26,33 +25,20 @@ fun main() {
     println("\nСтрельбы окончены. Вы нанесли ${Tank.totalDamage} единиц урона.")
 }
 
-
-enum class Ammunition(val id: Int) {
-    BLUE(1) {
-        override fun getName(): String = "синий"
-        override fun getDamage(): Int = 5
-    },
-    GREEN(2) {
-        override fun getName(): String = "зеленый"
-        override fun getDamage(): Int = 10
-    },
-    RED(3) {
-        override fun getName(): String = "красный"
-        override fun getDamage(): Int = 20
-    };
-
-    abstract fun getName(): String
-    abstract fun getDamage(): Int
+enum class Ammunition(val damage: Int) {
+    BLUE(5) ,
+    GREEN(10) ,
+    RED(20);
 }
 
-class Tank(var ammunition: Ammunition) {
+class Tank(var ammunition: Ammunition? = null) {
 
     companion object {
         var totalDamage = 0
     }
 
     fun swapAmmunition() {
-        println("\nВыберите тип боеприпасов: 1 - синие, 2 - зеленые, 3 - красные.")
+        println("Выберите тип боеприпасов: 1 - синие, 2 - зеленые, 3 - красные.")
         var newAmmunition = readln()
 
         while (newAmmunition != "1" && newAmmunition != "2" && newAmmunition != "3") {
@@ -64,12 +50,16 @@ class Tank(var ammunition: Ammunition) {
             "1" -> Ammunition.BLUE
             "2" -> Ammunition.GREEN
             "3" -> Ammunition.RED
-            else -> ammunition
+            else -> {
+                println("\nНет снаряда - нет стрельбы.")
+                return
+            }
         }
     }
 
     fun fire() {
-        ammunition.getDamage()
-        println("\nВыстрел нанёс ${ammunition.getDamage()} единиц урона.")
+        ammunition?.let {
+            println("\nВыстрел нанёс ${ammunition!!.damage} единиц урона.")
+        }
     }
 }
