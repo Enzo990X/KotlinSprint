@@ -4,7 +4,6 @@ import java.io.File
 import java.util.*
 import java.time.LocalDate
 
-
 fun main() {
 
     val currentDate = LocalDate.now()
@@ -14,7 +13,7 @@ fun main() {
     }
 
     val dictionary = File("dictionary.txt")
-
+    if (!dictionary.exists()) dictionary.createNewFile()
     updateDictionary(dictionary)
 }
 
@@ -63,7 +62,7 @@ fun updateDictionary(dictionary: File) {
 fun addWord(dictionary: File): Short {
 
     println("\nВведите новое слово: ")
-    dictionary.writeWordToDictionary(dictionary)
+    dictionary.writeWordToDictionary(getNewWord())
     wordsCounter++
 
     println("\nХотите ввести ещё одно слово?")
@@ -71,7 +70,7 @@ fun addWord(dictionary: File): Short {
 
     while (answer.equals("да", ignoreCase = true)) {
         println("\nВведите новое слово: ")
-        dictionary.writeWordToDictionary(dictionary)
+        dictionary.writeWordToDictionary(getNewWord())
         wordsCounter++
 
         println("\nХотите ввести ещё одно слово?")
@@ -81,11 +80,9 @@ fun addWord(dictionary: File): Short {
     return wordsCounter
 }
 
-fun File.writeWordToDictionary(dictionary: File) {
+fun getNewWord(): String = readln().lowercase(Locale.getDefault())
 
-    val newWord = readln().lowercase(Locale.getDefault())
-
-    if (!dictionary.exists()) dictionary.createNewFile()
+fun File.writeWordToDictionary(newWord: String) {
 
     val existingContent = this.readText(Charsets.UTF_8)
     val updatedContent = "$newWord\n$existingContent"
