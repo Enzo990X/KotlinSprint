@@ -1,60 +1,46 @@
 package org.example.lesson_15
 
-import kotlinx.coroutines.*
-
-fun main() = runBlocking {
+fun main() {
 
     println("Сколько пассажиров необходимо перевезти?")
-    passengersToMove = readln().toShort()
+    passengersToMove = readInput().toShort()
 
-    println("Сколько груза необходимо перевезти?")
-    loadToMove = readln().toInt() * TONNE
+    println("Сколько тонн груза необходимо перевезти?")
+    loadToMove = readInput() * TONNE
 
     val parkOfTaxi = MutableList(5) { Taxi(it + 1) }
     val parkOfLorry = MutableList(5) { Lorry(it + 1) }
 
-    val lorryJob = async { manageLorries(parkOfLorry) }
-    val taxiJob = async { manageTaxis(parkOfTaxi) }
-
-    lorryJob.await()
-    taxiJob.await()
-
-    println("Все операции завершены.")
+    manageLorries(parkOfLorry)
+    manageTaxis(parkOfTaxi)
 }
 
-suspend fun manageTaxis(parkOfTaxi: List<Taxi>) = coroutineScope {
-    while (passengersToMove > 0) {
-        val freeTaxis = parkOfTaxi.filter { !it.isBusy }
-
-        if (freeTaxis.isEmpty()) {
-            println("Все такси заняты. Ожидание свободного...")
-            while (parkOfTaxi.all { it.isBusy }) {
-                delay(SLEEP)
-            }
+fun readInput(): Int {
+    while (true) {
+        val answer = readln()
+        if (answer.isEmpty()) {
+            println("Ошибка: пустая строка. Пожалуйста, введите число.")
             continue
         }
 
-        val availableTaxi = freeTaxis.random()
-        availableTaxi.isBusy = true
+        try {
+            return answer.toInt()
+        } catch (e: NumberFormatException) {
+            println("Ошибка: введите действительное число.")
+        }
+    }
+}
+
+fun manageTaxis(parkOfTaxi: List<Taxi>) {
+    while (passengersToMove > 0) {
+
+        val availableTaxi = parkOfTaxi.random()
         availableTaxi.arrive()
 
         if (passengersToMove > 0) {
-            println("Сколько пассажиров поедет в такси №${availableTaxi.id}?")
-            availableTaxi.numberOfPassengers = readln().toShort()
-
-            while (availableTaxi.numberOfPassengers > availableTaxi.getMaxNumberOfPassengers()) {
-                println("Ошибка: в такси №${availableTaxi.id} не может быть больше " +
-                        "${availableTaxi.getMaxNumberOfPassengers()} пассажиров. Укажите другое количество.")
-                availableTaxi.numberOfPassengers = readln().toShort()
-            }
-
-            passengersToMove = (passengersToMove - availableTaxi.numberOfPassengers).toShort()
-        }
-
-        launch {
-            delay(availableTaxi.getWorkingTime())
-            availableTaxi.movePassengers(availableTaxi.numberOfPassengers)
-            availableTaxi.isBusy = false
+            askAboutPassengers(availableTaxi)
+            availableTaxi.getPassengers(availableTaxi.numberOfPassengers)
+            availableTaxi.carryPassengers(availableTaxi.numberOfPassengers)
         }
     }
 
@@ -63,57 +49,40 @@ suspend fun manageTaxis(parkOfTaxi: List<Taxi>) = coroutineScope {
     }
 }
 
-suspend fun manageLorries(parkOfLorry: List<Lorry>) = coroutineScope {
-    while (loadToMove > 0 || passengersToMove > 0) {
-        val freeLorries = parkOfLorry.filter { !it.isBusy }
+fun manageLorries(parkOfLorry: List<Lorry>) {
 
-        if (freeLorries.isEmpty()) {
-            println("Все грузовики заняты. Ожидание свободного...")
-            while (parkOfLorry.all { it.isBusy }) {
-                delay(SLEEP)
-            }
-            continue
-        }
+    while (loadToMove > 0) {
 
-        val availableLorry = freeLorries.random()
-        availableLorry.isBusy = true
+        val availableLorry = parkOfLorry.random()
         availableLorry.arrive()
 
         if (passengersToMove > 0) {
-            println("Грузовик №${availableLorry.id} будет перевозить пассажиров?")
-            val answer = readln()
 
-            if (answer.equals("да", ignoreCase = true)) {
-                println("Сколько пассажиров поедет в грузовике №${availableLorry.id}?")
-                availableLorry.numberOfPassengers = readln().toShort()
-
-                while (availableLorry.numberOfPassengers > availableLorry.getMaxNumberOfPassengers()) {
-                    println("Ошибка: в грузовике №${availableLorry.id} не может быть больше " +
-                            "${availableLorry.getMaxNumberOfPassengers()} пассажиров. Укажите другое количество.")
-                    availableLorry.numberOfPassengers = readln().toShort()
-
-                    launch {
-                        availableLorry.movePassengers(availableLorry.numberOfPassengers)
-                    }
-                }
-            }
-            passengersToMove = (passengersToMove - availableLorry.numberOfPassengers).toShort()
+            askAboutPassengers(availableLorry)
+            availableLorry.getPassengers(availableLorry.numberOfPassengers)
+            availableLorry.carryPassengers(availableLorry.numberOfPassengers)
         }
 
-        if (loadToMove > availableLorry.getMaxLoad()) {
-            availableLorry.load = availableLorry.getMaxLoad()
-        } else {
-            availableLorry.load = loadToMove
+         println("Сколько килограмм загрузить в грузовик №${availableLorry.id}?")
+         availableLorry.load = readInput()
+
+        while (availableLorry.load > availableLorry.getMaxLoad()) {
+            println(
+                "Ошибка: грузовик №${availableLorry.load} не может перевезти " +
+                        "${availableLorry.getMaxLoad()} килограмм. Укажите другое количество."
+            )
+            availableLorry.load = readInput()
         }
 
-        val loadMoved = (availableLorry.load / TONNE).toFloat()
+        while (availableLorry.load > loadToMove) {
+            println("Ошибка: осталось груза - $loadToMove. Укажите другое количество.")
+            availableLorry.load = readInput()
+        }
+
         loadToMove -= availableLorry.load
+        val loadMoved = availableLorry.load.toFloat() / TONNE
 
-        launch {
-            delay(availableLorry.getWorkingTime())
-            availableLorry.moveCargo(loadMoved)
-            availableLorry.isBusy = false
-        }
+        availableLorry.moveCargo(loadMoved)
     }
 
     if (loadToMove == 0) {
@@ -125,28 +94,81 @@ suspend fun manageLorries(parkOfLorry: List<Lorry>) = coroutineScope {
     }
 }
 
+fun askAboutPassengers(availableLorry: Lorry) {
+
+    println("Грузовик №${availableLorry.id} будет перевозить пассажиров? (да/нет)")
+    var answer = readln()
+
+    while (!answer.equals("да", ignoreCase = true) && !answer.equals("нет", ignoreCase = true)) {
+        println("Ошибка. Повторите ввод.")
+        answer = readln()
+    }
+
+    when {
+        answer.equals("да", ignoreCase = true) -> {
+            println("Сколько пассажиров поедет в грузовике №${availableLorry.id}?")
+            availableLorry.numberOfPassengers = readInput().toShort()
+
+            while (availableLorry.numberOfPassengers > availableLorry.getMaxNumberOfPassengers()) {
+                println(
+                    "Ошибка: в грузовике №${availableLorry.id} не может быть больше " +
+                            "${availableLorry.getMaxNumberOfPassengers()} пассажиров. Укажите другое количество."
+                )
+                availableLorry.numberOfPassengers = readInput().toShort()
+            }
+        }
+
+        answer.equals("нет", ignoreCase = true) -> return
+    }
+
+    passengersToMove = (passengersToMove - availableLorry.numberOfPassengers).toShort()
+}
+
+fun askAboutPassengers(availableTaxi: Taxi) {
+
+    println("Сколько пассажиров поедет в такси №${availableTaxi.id}?")
+    availableTaxi.numberOfPassengers = readInput().toShort()
+
+    while (availableTaxi.numberOfPassengers > availableTaxi.getMaxNumberOfPassengers()) {
+        println(
+            "Ошибка: в такси №${availableTaxi.id} не может быть больше " +
+                    "${availableTaxi.getMaxNumberOfPassengers()} пассажиров. Укажите другое количество."
+        )
+        availableTaxi.numberOfPassengers = readInput().toShort()
+    }
+
+    while (availableTaxi.numberOfPassengers > passengersToMove) {
+        println("Ошибка: осталось пассажиров - $passengersToMove. Укажите другое количество.")
+        availableTaxi.numberOfPassengers = readInput().toShort()
+    }
+
+    passengersToMove = (passengersToMove - availableTaxi.numberOfPassengers).toShort()
+}
+
+
 class Taxi(
     val id: Int,
     var numberOfPassengers: Short = 0,
-    var isBusy: Boolean = false,
 ) : Movable, PassengerTransport {
 
     private val taxiMaxNumberOfPassengers: Short = 3
-    private val workingTime: Long = 5000L
 
     fun getMaxNumberOfPassengers(): Short {
         return taxiMaxNumberOfPassengers
     }
 
-    fun getWorkingTime(): Long {
-        return workingTime
-    }
-
     override fun arrive() {
-        println("Такси №$id едет на заказ.")
+        println("Такси №$id приехало на заказ.")
     }
 
-    override fun movePassengers(numberOfPassengers: Short) {
+    override fun getPassengers(numberOfPassengers: Short) {
+        when (numberOfPassengers) {
+            1.toShort() -> println("Такси №$id сел $numberOfPassengers пассажир.")
+            else -> println("В такси №$id село $numberOfPassengers пассажира.")
+        }
+    }
+
+    override fun carryPassengers(numberOfPassengers: Short) {
         when (numberOfPassengers) {
             1.toShort() -> println("Такси №$id привезло $numberOfPassengers пассажира.")
             else -> println("Такси №$id привезло $numberOfPassengers пассажиров.")
@@ -158,12 +180,10 @@ class Lorry(
     val id: Int,
     var numberOfPassengers: Short = 0,
     var load: Int = 0,
-    var isBusy: Boolean = false,
 ) : Movable, PassengerTransport, CargoTransport {
 
     private val lorryMaxNumberOfPassengers: Short = 1
     private val maxLoad: Int = 2000
-    private val workingTime: Long = 5000L
 
     fun getMaxNumberOfPassengers(): Short {
         return lorryMaxNumberOfPassengers
@@ -173,15 +193,18 @@ class Lorry(
         return maxLoad
     }
 
-    fun getWorkingTime(): Long {
-        return workingTime
-    }
-
     override fun arrive() {
-        println("Грузовик №$id едет на погрузку.")
+        println("Грузовик №$id приехал на погрузку.")
     }
 
-    override fun movePassengers(numberOfPassengers: Short) {
+    override fun getPassengers(numberOfPassengers: Short) {
+        when (numberOfPassengers) {
+            1.toShort() -> println("В грузовик №$id сел $numberOfPassengers пассажир.")
+            else -> println("В грузовик  №$id село $numberOfPassengers пассажиров.")
+        }
+    }
+
+    override fun carryPassengers(numberOfPassengers: Short) {
         when (numberOfPassengers) {
             1.toShort() -> println("Грузовик №$id привез $numberOfPassengers пассажира.")
             else -> println("Грузовик №$id привез $numberOfPassengers пассажиров.")
@@ -193,15 +216,15 @@ class Lorry(
         when (load) {
 
             in 1.0f..1.1f ->
-                println("Грузовик №$id перевез ${String.format("%.1f", load)} тонну груза.")
+                println("Грузовик №$id перевез ${String.format("%.2f", load)} тонну груза.")
 
             in 1.2f..1.4f ->
-                println("Грузовик №$id перевез ${String.format("%.1f", load)} тонны груза.")
+                println("Грузовик №$id перевез ${String.format("%.2f", load)} тонны груза.")
 
             2.0f ->
-                println("Грузовик №$id перевез ${String.format("%.1f", load)} тонны груза.")
+                println("Грузовик №$id перевез ${String.format("%.2f", load)} тонны груза.")
 
-            else -> println("Грузовик №$id перевез ${String.format("%.1f", load)} тонн груза.")
+            else -> println("Грузовик №$id перевез ${String.format("%.2f", load)} тонн груза.")
         }
     }
 }
@@ -211,14 +234,17 @@ interface Movable {
 }
 
 interface PassengerTransport {
-    fun movePassengers(numberOfPassengers: Short)
+
+    fun getPassengers(numberOfPassengers: Short)
+
+    fun carryPassengers(numberOfPassengers: Short)
 }
 
 interface CargoTransport {
+
     fun moveCargo(load: Float)
 }
 
 var passengersToMove: Short = 0
 var loadToMove: Int = 0
 private const val TONNE = 1000
-private const val SLEEP = 1000L
