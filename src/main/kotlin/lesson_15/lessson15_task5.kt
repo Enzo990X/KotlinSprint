@@ -13,6 +13,9 @@ fun main() {
 
     manageLorries(parkOfLorry)
     manageTaxis(parkOfTaxi)
+
+    println("Грузов для перевозки нет.")
+    println("Пассажиров для перевозки нет.")
 }
 
 fun readInput(): Int {
@@ -36,16 +39,9 @@ fun manageTaxis(parkOfTaxi: List<Taxi>) {
 
         val availableTaxi = parkOfTaxi.random()
         availableTaxi.arrive()
-
-        if (passengersToMove > 0) {
-            askAboutPassengers(availableTaxi)
-            availableTaxi.getPassengers(availableTaxi.numberOfPassengers)
-            availableTaxi.carryPassengers(availableTaxi.numberOfPassengers)
-        }
-    }
-
-    if (passengersToMove == 0.toShort()) {
-        println("Все пассажиры успешно перевезены.")
+        askAboutPassengers(availableTaxi)
+        availableTaxi.getPassengers(availableTaxi.numberOfPassengers)
+        availableTaxi.carryPassengers(availableTaxi.numberOfPassengers)
     }
 }
 
@@ -63,8 +59,8 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
             availableLorry.carryPassengers(availableLorry.numberOfPassengers)
         }
 
-         println("Сколько килограмм загрузить в грузовик №${availableLorry.id}?")
-         availableLorry.load = readInput()
+        println("Сколько килограмм загрузить в грузовик №${availableLorry.id}?")
+        availableLorry.load = readInput()
 
         while (availableLorry.load > availableLorry.getMaxLoad()) {
             println(
@@ -83,14 +79,6 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
         val loadMoved = availableLorry.load.toFloat() / TONNE
 
         availableLorry.moveCargo(loadMoved)
-    }
-
-    if (loadToMove == 0) {
-        println("Все грузы успешно перевезены.")
-    }
-
-    if (passengersToMove == 0.toShort()) {
-        println("Все пассажиры успешно перевезены.")
     }
 }
 
