@@ -55,6 +55,9 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
         if (passengersToMove > 0) {
 
             askAboutPassengers(availableLorry)
+        }
+
+        if (availableLorry.numberOfPassengers > 0) {
             availableLorry.getPassengers(availableLorry.numberOfPassengers)
             availableLorry.carryPassengers(availableLorry.numberOfPassengers)
         }
