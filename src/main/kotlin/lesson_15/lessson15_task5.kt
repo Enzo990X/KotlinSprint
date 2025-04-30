@@ -57,11 +57,6 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
             askAboutPassengers(availableLorry)
         }
 
-        if (availableLorry.numberOfPassengers > 0) {
-            availableLorry.getPassengers(availableLorry.numberOfPassengers)
-            availableLorry.carryPassengers(availableLorry.numberOfPassengers)
-        }
-
         println("Сколько килограмм загрузить в грузовик №${availableLorry.id}?")
         availableLorry.load = readInput()
 
@@ -81,6 +76,9 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
         loadToMove -= availableLorry.load
         val loadMoved = availableLorry.load.toFloat() / TONNE
 
+        if (availableLorry.numberOfPassengers > 0) {
+            availableLorry.carryPassengers(availableLorry.numberOfPassengers)
+        }
         availableLorry.moveCargo(loadMoved)
     }
 }
@@ -106,7 +104,8 @@ fun askAboutPassengers(availableLorry: Lorry) {
                             "${availableLorry.getMaxNumberOfPassengers()} пассажиров. Укажите другое количество."
                 )
                 availableLorry.numberOfPassengers = readInput().toShort()
-            }
+                }
+            availableLorry.getPassengers(availableLorry.numberOfPassengers)
         }
 
         answer.equals("нет", ignoreCase = true) -> return
