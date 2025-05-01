@@ -8,7 +8,7 @@ fun main() {
 
 
 
-    while (player.health > DEATH || enemy.health > DEATH) {
+    while (player.health > DEATH && enemy.health > DEATH) {
 
         enemy.getDamage(player.dealDamage())
         Thread.sleep(SLEEP)
@@ -51,7 +51,7 @@ class Player(
 
         val neededHealth = MAX_HEALTH - health
 
-        if (neededHealth > POT) {
+        health = if (neededHealth > POT) {
             (health + POT).toShort()
         } else {
             MAX_HEALTH
@@ -73,6 +73,7 @@ class Player(
     private fun die() {
 
         if (health <= DEATH) {
+            health = DEATH
             maxHitDamage = DEATH
             isAbleToGetPot = false
             println("$name погиб.")
