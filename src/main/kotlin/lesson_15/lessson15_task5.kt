@@ -3,16 +3,16 @@ package org.example.lesson_15
 fun main() {
 
     println("Сколько пассажиров необходимо перевезти?")
-    passengersToMove = readInput().toShort()
+    var passengersToMove = readInput().toShort()
 
     println("Сколько тонн груза необходимо перевезти?")
-    loadToMove = readInput() * TONNE
+    var loadToMove = readInput() * TONNE
 
     val parkOfTaxi = MutableList(5) { Taxi(it + 1) }
     val parkOfLorry = MutableList(5) { Lorry(it + 1) }
 
-    manageLorries(parkOfLorry)
-    manageTaxis(parkOfTaxi)
+    manageLorries(parkOfLorry, passengersToMove, loadToMove)
+    manageTaxis(parkOfTaxi, passengersToMove)
 
     println("Грузов для перевозки нет.")
     println("Пассажиров для перевозки нет.")
@@ -34,27 +34,29 @@ fun readInput(): Int {
     }
 }
 
-fun manageTaxis(parkOfTaxi: List<Taxi>) {
+fun manageTaxis(parkOfTaxi: List<Taxi>, passengersToMove: Short) {
     while (passengersToMove > 0) {
 
         val availableTaxi = parkOfTaxi.random()
         availableTaxi.arrive()
-        askAboutPassengers(availableTaxi)
+        askAboutPassengers(availableTaxi, passengersToMove)
         availableTaxi.getPassengers(availableTaxi.numberOfPassengers)
         availableTaxi.carryPassengers(availableTaxi.numberOfPassengers)
     }
 }
 
-fun manageLorries(parkOfLorry: List<Lorry>) {
+fun manageLorries(parkOfLorry: List<Lorry>, passengersToMove: Short, loadToMove: Int) {
 
-    while (loadToMove > 0) {
+    var loadInWork = loadToMove
+
+    while (loadInWork > 0) {
 
         val availableLorry = parkOfLorry.random()
         availableLorry.arrive()
 
         if (passengersToMove > 0) {
 
-            askAboutPassengers(availableLorry)
+            askAboutPassengers(availableLorry, passengersToMove)
         }
 
         println("Сколько килограмм загрузить в грузовик №${availableLorry.id}?")
@@ -73,7 +75,7 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
             availableLorry.load = readInput()
         }
 
-        loadToMove -= availableLorry.load
+        loadInWork -= availableLorry.load
         val loadMoved = availableLorry.load.toFloat() / TONNE
 
         if (availableLorry.numberOfPassengers > 0) {
@@ -83,7 +85,9 @@ fun manageLorries(parkOfLorry: List<Lorry>) {
     }
 }
 
-fun askAboutPassengers(availableLorry: Lorry) {
+fun askAboutPassengers(availableLorry: Lorry, passengersToMove: Short): Short {
+
+    var passengersInWork = passengersToMove
 
     println("Грузовик №${availableLorry.id} будет перевозить пассажиров? (да/нет)")
     var answer = readln()
@@ -108,13 +112,16 @@ fun askAboutPassengers(availableLorry: Lorry) {
             availableLorry.getPassengers(availableLorry.numberOfPassengers)
         }
 
-        answer.equals("нет", ignoreCase = true) -> return
+        answer.equals("нет", ignoreCase = true) -> return passengersToMove
     }
 
-    passengersToMove = (passengersToMove - availableLorry.numberOfPassengers).toShort()
+    passengersInWork = (passengersInWork - availableLorry.numberOfPassengers).toShort()
+    return passengersInWork
 }
 
-fun askAboutPassengers(availableTaxi: Taxi) {
+fun askAboutPassengers(availableTaxi: Taxi, passengersToMove: Short): Short {
+
+    var passengersInWork = passengersToMove
 
     println("Сколько пассажиров поедет в такси №${availableTaxi.id}?")
     availableTaxi.numberOfPassengers = readInput().toShort()
@@ -127,12 +134,13 @@ fun askAboutPassengers(availableTaxi: Taxi) {
         availableTaxi.numberOfPassengers = readInput().toShort()
     }
 
-    while (availableTaxi.numberOfPassengers > passengersToMove) {
-        println("Ошибка: осталось пассажиров - $passengersToMove. Укажите другое количество.")
+    while (availableTaxi.numberOfPassengers > passengersInWork) {
+        println("Ошибка: осталось пассажиров - $passengersInWork. Укажите другое количество.")
         availableTaxi.numberOfPassengers = readInput().toShort()
     }
 
-    passengersToMove = (passengersToMove - availableTaxi.numberOfPassengers).toShort()
+    passengersInWork = (passengersInWork - availableTaxi.numberOfPassengers).toShort()
+    return passengersInWork
 }
 
 
@@ -235,6 +243,4 @@ interface CargoTransport {
     fun moveCargo(load: Float)
 }
 
-var passengersToMove: Short = 0
-var loadToMove: Int = 0
 private const val TONNE = 1000
