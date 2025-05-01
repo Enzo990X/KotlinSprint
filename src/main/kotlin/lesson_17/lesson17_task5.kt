@@ -5,10 +5,8 @@ fun main() {
     println(user.password)
 
     user.password = "87654321"
-
     user.login = "admin"
 }
-
 
 class OneMoreUser(login: String, password: String) {
 
@@ -16,11 +14,8 @@ class OneMoreUser(login: String, password: String) {
         get() {
             return "*".repeat(field.length)
         }
-
         set(value) {
-            if (field != value) {
-                println("Вы не можете изменить пароль.")
-            }
+            println("Вы не можете изменить пароль.")
             field = this.password
         }
 
