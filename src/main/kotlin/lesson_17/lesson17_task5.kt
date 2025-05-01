@@ -2,22 +2,21 @@ package org.example.lesson_17
 
 fun main() {
     val user = OneMoreUser("user", "12345678")
-    println(user.hidedPassword)
+    println(user.password)
 
-    user.newPassword = "87654321"
+    user.password = "87654321"
 
-    user.newLogin = "admin"
+    user.login = "admin"
 }
 
 
-class OneMoreUser(var login: String, private val password: String) {
+class OneMoreUser(login: String, password: String) {
 
-    val hidedPassword: String
+    var password = password
         get() {
-            return "*".repeat(password.length)
+            return "*".repeat(field.length)
         }
 
-    var newPassword: String = password
         set(value) {
             if (field != value) {
                 println("Вы не можете изменить пароль.")
@@ -25,7 +24,7 @@ class OneMoreUser(var login: String, private val password: String) {
             field = this.password
         }
 
-    var newLogin: String = login
+    var login = login
         set(value) {
             if (value != this.login) {
                 println("Логин изменён.")
