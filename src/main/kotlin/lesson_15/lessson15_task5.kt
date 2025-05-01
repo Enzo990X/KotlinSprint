@@ -12,6 +12,8 @@ fun main() {
     val parkOfLorry = MutableList(5) { Lorry(it + 1) }
 
     manageLorries(parkOfLorry, passengersToMove, loadToMove)
+
+    println(passengersToMove)
     manageTaxis(parkOfTaxi, passengersToMove)
 
     println("Грузов для перевозки нет.")
