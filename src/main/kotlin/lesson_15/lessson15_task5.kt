@@ -2,19 +2,14 @@ package org.example.lesson_15
 
 fun main() {
 
-    println("Сколько пассажиров необходимо перевезти?")
-    var passengersToMove = readInput().toShort()
-
-    println("Сколько тонн груза необходимо перевезти?")
-    var loadToMove = readInput() * TONNE
+    println("Укажите количество пассажиров и грузов:")
+    val order = Order(readInput().toShort(), readInput() * TONNE)
 
     val parkOfTaxi = MutableList(5) { Taxi(it + 1) }
     val parkOfLorry = MutableList(5) { Lorry(it + 1) }
 
-    manageLorries(parkOfLorry, passengersToMove, loadToMove)
-
-    println(passengersToMove)
-    manageTaxis(parkOfTaxi, passengersToMove)
+    manageLorries(parkOfLorry, order)
+    manageTaxis(parkOfTaxi, order)
 
     println("Грузов для перевозки нет.")
     println("Пассажиров для перевозки нет.")
@@ -36,48 +31,43 @@ fun readInput(): Int {
     }
 }
 
-fun manageTaxis(parkOfTaxi: List<Taxi>, passengersToMove: Short) {
-    while (passengersToMove > 0) {
+fun manageTaxis(parkOfTaxi: List<Taxi>, order: Order) {
+    while (order.passengers > 0) {
 
         val availableTaxi = parkOfTaxi.random()
         availableTaxi.arrive()
-        askAboutPassengers(availableTaxi, passengersToMove)
+        askAboutPassengers(availableTaxi, order)
         availableTaxi.getPassengers(availableTaxi.numberOfPassengers)
         availableTaxi.carryPassengers(availableTaxi.numberOfPassengers)
     }
 }
 
-fun manageLorries(parkOfLorry: List<Lorry>, passengersToMove: Short, loadToMove: Int) {
+fun manageLorries(parkOfLorry: List<Lorry>, order: Order) {
 
-    var loadInWork = loadToMove
-
-    while (loadInWork > 0) {
+    while (order.load > 0) {
 
         val availableLorry = parkOfLorry.random()
         availableLorry.arrive()
 
-        if (passengersToMove > 0) {
-
-            askAboutPassengers(availableLorry, passengersToMove)
-        }
+        if (order.passengers > 0) askAboutPassengers(availableLorry, order)
 
         println("Сколько килограмм загрузить в грузовик №${availableLorry.id}?")
         availableLorry.load = readInput()
 
         while (availableLorry.load > availableLorry.getMaxLoad()) {
             println(
-                "Ошибка: грузовик №${availableLorry.load} не может перевезти " +
+                "Ошибка: грузовик №${availableLorry.id} не может перевезти " +
                         "${availableLorry.getMaxLoad()} килограмм. Укажите другое количество."
             )
             availableLorry.load = readInput()
         }
 
-        while (availableLorry.load > loadToMove) {
-            println("Ошибка: осталось груза - $loadToMove. Укажите другое количество.")
+        while (availableLorry.load > order.load) {
+            println("Ошибка: осталось груза - ${order.load}. Укажите другое количество.")
             availableLorry.load = readInput()
         }
 
-        loadInWork -= availableLorry.load
+        order.load -= availableLorry.load
         val loadMoved = availableLorry.load.toFloat() / TONNE
 
         if (availableLorry.numberOfPassengers > 0) {
@@ -87,9 +77,7 @@ fun manageLorries(parkOfLorry: List<Lorry>, passengersToMove: Short, loadToMove:
     }
 }
 
-fun askAboutPassengers(availableLorry: Lorry, passengersToMove: Short): Short {
-
-    var passengersInWork = passengersToMove
+fun askAboutPassengers(availableLorry: Lorry, order: Order) {
 
     println("Грузовик №${availableLorry.id} будет перевозить пассажиров? (да/нет)")
     var answer = readln()
@@ -110,20 +98,17 @@ fun askAboutPassengers(availableLorry: Lorry, passengersToMove: Short): Short {
                             "${availableLorry.getMaxNumberOfPassengers()} пассажиров. Укажите другое количество."
                 )
                 availableLorry.numberOfPassengers = readInput().toShort()
-                }
+            }
             availableLorry.getPassengers(availableLorry.numberOfPassengers)
         }
 
-        answer.equals("нет", ignoreCase = true) -> return passengersToMove
+        answer.equals("нет", ignoreCase = true) -> return
     }
 
-    passengersInWork = (passengersInWork - availableLorry.numberOfPassengers).toShort()
-    return passengersInWork
+    order.passengers = (order.passengers - availableLorry.numberOfPassengers).toShort()
 }
 
-fun askAboutPassengers(availableTaxi: Taxi, passengersToMove: Short): Short {
-
-    var passengersInWork = passengersToMove
+fun askAboutPassengers(availableTaxi: Taxi, order: Order) {
 
     println("Сколько пассажиров поедет в такси №${availableTaxi.id}?")
     availableTaxi.numberOfPassengers = readInput().toShort()
@@ -136,22 +121,24 @@ fun askAboutPassengers(availableTaxi: Taxi, passengersToMove: Short): Short {
         availableTaxi.numberOfPassengers = readInput().toShort()
     }
 
-    while (availableTaxi.numberOfPassengers > passengersInWork) {
-        println("Ошибка: осталось пассажиров - $passengersInWork. Укажите другое количество.")
+    while (availableTaxi.numberOfPassengers > order.passengers) {
+        println("Ошибка: осталось пассажиров - ${order.passengers}. Укажите другое количество.")
         availableTaxi.numberOfPassengers = readInput().toShort()
     }
 
-    passengersInWork = (passengersInWork - availableTaxi.numberOfPassengers).toShort()
-    return passengersInWork
+    order.passengers = (order.passengers - availableTaxi.numberOfPassengers).toShort()
 }
 
+class Order(
+    var passengers: Short,
+    var load: Int,
+)
 
 class Taxi(
     val id: Int,
     var numberOfPassengers: Short = 0,
+    private val taxiMaxNumberOfPassengers: Short = 3,
 ) : Movable, PassengerTransport {
-
-    private val taxiMaxNumberOfPassengers: Short = 3
 
     fun getMaxNumberOfPassengers(): Short {
         return taxiMaxNumberOfPassengers
@@ -180,10 +167,9 @@ class Lorry(
     val id: Int,
     var numberOfPassengers: Short = 0,
     var load: Int = 0,
+    private val lorryMaxNumberOfPassengers: Short = 1,
+    private val maxLoad: Int = 2000,
 ) : Movable, PassengerTransport, CargoTransport {
-
-    private val lorryMaxNumberOfPassengers: Short = 1
-    private val maxLoad: Int = 2000
 
     fun getMaxNumberOfPassengers(): Short {
         return lorryMaxNumberOfPassengers
