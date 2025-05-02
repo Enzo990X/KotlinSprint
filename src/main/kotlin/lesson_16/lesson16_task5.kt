@@ -10,16 +10,19 @@ fun main() {
 
     while (player.health > DEATH && enemy.health > DEATH) {
 
-        enemy.getDamage(player.dealDamage())
+        val playerHit = player.makeHit()
+        enemy.getDamage(playerHit)
         Thread.sleep(SLEEP)
-        player.getDamage(enemy.dealDamage())
+
+        val enemyHit = enemy.makeHit()
+        player.getDamage(enemyHit)
         Thread.sleep(SLEEP)
 
         if (player.health == DEATH || enemy.health == DEATH) break
 
-        player.getPot(isAbleToGetPot = player.isAbleToGetPot)
+        player.getPot()
         Thread.sleep(SLEEP)
-        enemy.getPot(isAbleToGetPot = enemy.isAbleToGetPot)
+        enemy.getPot()
         Thread.sleep(SLEEP)
     }
 }
@@ -27,23 +30,25 @@ fun main() {
 class Player(
     private val name: String,
     var health: Short,
-    var maxHitDamage: Short,
-    var isAbleToGetPot: Boolean = true,
+    private var maxHitDamage: Short,
+    private var isAbleToGetPot: Boolean = true,
 ) {
 
-    fun dealDamage(): Short {
+    fun makeHit(): Short {
         val hitDamage: Short = (MISS..maxHitDamage).random().toShort()
-        health = (health - hitDamage).toShort()
 
         if (hitDamage == MISS) println("$name промахнулся.")
         else println("$name нанес $hitDamage урона.")
 
         return hitDamage
-        }
+    }
 
     fun getDamage(damage: Short): Short {
-        health = (health - damage).toShort()
-        die()
+
+        if (damage >= health) die()
+        else health = (health - damage).toShort()
+
+        println("У $name осталось $health здоровья.")
         return health
     }
 
@@ -62,22 +67,20 @@ class Player(
         return health
     }
 
-    fun getPot(isAbleToGetPot: Boolean) {
+    fun getPot() {
         if (isAbleToGetPot) {
 
-            val isLucky = Math.random() > 0.5
+            val isLucky = Math.random() > 0.4
             if (!isLucky) restoreHealth()
         }
     }
 
     private fun die() {
 
-        if (health <= DEATH) {
-            health = DEATH
-            maxHitDamage = DEATH
-            isAbleToGetPot = false
-            println("$name погиб.")
-        }
+        health = DEATH
+        maxHitDamage = DEATH
+        isAbleToGetPot = false
+        println("$name погиб.")
     }
 }
 
