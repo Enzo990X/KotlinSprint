@@ -61,21 +61,15 @@ fun updateDictionary(dictionary: File) {
 
 fun addWord(dictionary: File): Short {
 
-    println("\nВведите новое слово: ")
-    dictionary.writeWordToDictionary(getNewWord())
-    wordsCounter++
-
-    println("\nХотите ввести ещё одно слово?")
-    var answer = readln()
-
-    while (answer.equals("да", ignoreCase = true)) {
+    do {
         println("\nВведите новое слово: ")
         dictionary.writeWordToDictionary(getNewWord())
         wordsCounter++
 
         println("\nХотите ввести ещё одно слово?")
-        answer = readln()
+        val answer = readln()
     }
+    while (answer.equals("да", ignoreCase = true))
 
     return wordsCounter
 }
