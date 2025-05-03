@@ -2,20 +2,20 @@ package org.example.lesson_11
 
 fun main() {
 
-    val forumBuilder = Forum.Builder()
+    val forumBuilder = Forum()
     println("Добро пожаловать на форум ${forumBuilder.name}!\n")
 
+    println("Хотите создать нового пользователя?")
     askForNewUser(forumBuilder)
     askForNewPost(forumBuilder)
 
     forumBuilder.printThread()
 }
 
-fun askForNewUser(forumBuilder: Forum.Builder) {
-    println("Хотите создать нового пользователя?")
-    var answerAboutNewUser = readln()
+fun askForNewUser(forumBuilder: Forum) {
+        var answerAboutNewUser = readln().lowercase()
 
-    while (answerAboutNewUser == "Да" || answerAboutNewUser == "да") {
+    while (answerAboutNewUser == "да") {
 
         println("Введите имя пользователя: ")
         val name = readln()
@@ -25,11 +25,23 @@ fun askForNewUser(forumBuilder: Forum.Builder) {
     }
 }
 
-fun askForNewPost(forumBuilder: Forum.Builder) {
-    println("\nХотите написать новый пост?")
-    var answerAboutNewPost = readln()
+fun askForNewPost(forumBuilder: Forum) {
 
-    while (answerAboutNewPost == "Да" || answerAboutNewPost == "да") {
+    if (forumBuilder.users.isEmpty()) {
+        println("Список пользователей пуст. Хотите создать нового пользователя?")
+        val createUserResponse = readln().lowercase()
+        if (createUserResponse == "да") {
+            askForNewUser(forumBuilder)
+        } else {
+            println("Невозможно создать пост без пользователей.")
+            return
+        }
+    }
+
+    println("\nХотите написать новый пост?")
+    var answerAboutNewPost = readln().lowercase()
+
+    while (answerAboutNewPost == "да") {
 
         println("Введите имя пользователя: ")
         var userName = readln()
@@ -53,9 +65,9 @@ fun askForNewPost(forumBuilder: Forum.Builder) {
 }
 
 class Forum(
-    val name: String,
+    var name: String = "Песочница",
     val users: MutableList<ForumUser> = mutableListOf(),
-    val messages: MutableList<Message> = mutableListOf(),
+    private val messages: MutableList<Message> = mutableListOf(),
 ) {
 
     companion object {
@@ -63,44 +75,30 @@ class Forum(
         var messageId: Int = 0
     }
 
-    class Builder {
-        var name: String = "Песочница"
-        val users: MutableList<ForumUser> = mutableListOf()
-        val messages: MutableList<Message> = mutableListOf()
+    fun createNewUser(name: String): ForumUser {
 
-        fun createNewUser(name: String): ForumUser {
-
-            if (users.any { it.name == name }) {
-                println("Пользователь с таким именем уже существует.")
-                return ForumUser(name, userId)
-            }
-
-            val newUserId = userId++
-            val user = ForumUser(name, newUserId)
-            users.add(user)
-            return user
+        if (users.any { it.name == name }) {
+            println("Пользователь с таким именем уже существует.")
+            return ForumUser(name, userId)
         }
 
-        fun createNewMessage(text: String, userId: Int): Message {
-            val newMessageId = messageId++
-            val newMessage = Message(text, userId, newMessageId)
-            messages.add(newMessage)
-            return newMessage
-        }
+        val newUserId = userId++
+        val user = ForumUser(name, newUserId)
+        users.add(user)
+        return user
+    }
 
-        fun printThread() {
-            println(messages.joinToString("\n") { message ->
-                "${users.first { users -> users.userId == message.userId }.name}: ${message.text}" })
-        }
+    fun createNewMessage(text: String, userId: Int): Message {
+        val newMessageId = messageId++
+        val newMessage = Message(text, userId, newMessageId)
+        messages.add(newMessage)
+        return newMessage
+    }
 
-        fun setName(name: String): Builder {
-            this.name = name
-            return this
-        }
-
-        fun build(): Forum {
-            return Forum(name)
-        }
+    fun printThread() {
+        println(messages.joinToString("\n") { message ->
+            "${users.first { users -> users.userId == message.userId }.name}: ${message.text}"
+        })
     }
 }
 
