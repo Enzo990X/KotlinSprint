@@ -16,7 +16,6 @@ class OneMoreUser(login: String, password: String) {
         }
         set(value) {
             println("Вы не можете изменить пароль.")
-            field = this.password
         }
 
     var login = login
