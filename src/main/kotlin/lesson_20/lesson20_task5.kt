@@ -19,13 +19,13 @@ class Robot {
 
     private val vocabulary = listOf(phrase1, phrase2, phrase3, phrase4, phrase5)
 
-    private var modifier: ((String) -> String)? = null
+    private var modifier: ((String) -> String) = { randomPhrase -> randomPhrase }
 
 
     fun say() {
 
         val randomPhrase = vocabulary.random()
-        val modifiedPhrase = modifier?.invoke(randomPhrase) ?: randomPhrase
+        val modifiedPhrase = modifier.invoke(randomPhrase)
 
         println(modifiedPhrase)
     }
