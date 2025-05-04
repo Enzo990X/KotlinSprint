@@ -7,7 +7,9 @@ fun main () {
         "15-05-2025 15:05",
         4.367f)
 
-    println(place.toString())
+    val (name, description, date, distanceToEarth) = place
+
+    println("Созвездие $name изучено $date. $description Расстояние до Земли $distanceToEarth световых лет.")
 }
 
 data class GalacticGuide (
@@ -15,8 +17,4 @@ data class GalacticGuide (
     val description: String,
     var date: String,
     val distanceToEarth: Float,
-) {
-    override fun toString(): String {
-        return "Созвездие $name изучено $date. $description Расстояние до Земли $distanceToEarth световых лет"
-    }
-}
+)
