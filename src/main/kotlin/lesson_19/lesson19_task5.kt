@@ -5,16 +5,20 @@ fun main() {
     println("Сколько человек Вы хотите внести в базу?")
     val numberOfNewRecords = readInput()
 
-    val database = mutableListOf<Pair<String, String>>()
+    val database = mutableListOf<Pair<String, Gender>>()
 
     repeat(numberOfNewRecords) {
         println("Введите полное имя в формате Фамилия Имя Отчество (через пробел):")
         val fullName = readNameInput()
 
         println("Укажите пол (м/ж):")
-        val gender = readGender()
+        val gender = readGenderInput()
 
-        database.add(Pair(fullName, gender))
+        when (gender) {
+            "м" -> database.add(Pair(fullName, Gender.MALE))
+            "ж" -> database.add(Pair(fullName, Gender.FEMALE))
+        }
+
         println("Данные внесены.\n")
     }
 
@@ -45,20 +49,18 @@ fun readNameInput(): String {
         input = readln()
     }
 
-    while (input.split(" ").size != 3) {
+    while (input.split(" ").size != FULLNAME) {
         println("Ошибка: введите полное имя через пробел.")
         input = readln()
     }
 
-    while (input.split(" ").all { it.isNotEmpty() && !it[0].isUpperCase() }) {
-    println("Ошибка: введите каждое слово с заглавной буквы.")
-        input = readln()
-    }
+    input = input.split(" ")
+        .joinToString(" ") { it.lowercase().replaceFirstChar { char -> char.uppercase() } }
 
     return input
 }
 
-fun readGender(): String {
+fun readGenderInput(): String {
     var input = readln()
 
     while (!input.equals("м", ignoreCase = true) && !input.equals("ж", ignoreCase = true)) {
@@ -66,15 +68,12 @@ fun readGender(): String {
         input = readln()
     }
 
-    when (input){
-        Gender.MALE.shortGender -> input = "пол: мужской"
-        Gender.FEMALE.shortGender -> input =  "пол: женский"
-    }
-
     return input
 }
 
-enum class Gender (val shortGender: String) {
-    MALE("м"),
-    FEMALE("ж"),
+enum class Gender {
+    MALE,
+    FEMALE,
 }
+
+const val FULLNAME = 3
