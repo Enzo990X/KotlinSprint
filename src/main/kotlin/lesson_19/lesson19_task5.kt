@@ -5,18 +5,18 @@ fun main() {
     println("Сколько человек Вы хотите внести в базу?")
     val numberOfNewRecords = readInput()
 
-    val database = mutableListOf<Pair<String, Gender>>()
+    val database = mutableListOf<Person>()
 
     repeat(numberOfNewRecords) {
         println("Введите полное имя в формате Фамилия Имя Отчество (через пробел):")
-        val fullName = readNameInput()
+        val fullNameInput = readNameInput()
 
         println("Укажите пол (м/ж):")
-        val gender = readGenderInput()
+        val genderInput = readGenderInput()
 
-        when (gender) {
-            "м" -> database.add(Pair(fullName, Gender.MALE))
-            "ж" -> database.add(Pair(fullName, Gender.FEMALE))
+        when (genderInput) {
+            "м" -> database.add(Person(fullNameInput, Gender.MALE))
+            "ж" -> database.add(Person(fullNameInput, Gender.FEMALE))
         }
 
         println("Данные внесены.\n")
@@ -70,6 +70,8 @@ fun readGenderInput(): String {
 
     return input
 }
+
+class Person(val fullName: String, val gender: Gender)
 
 enum class Gender {
     MALE,
