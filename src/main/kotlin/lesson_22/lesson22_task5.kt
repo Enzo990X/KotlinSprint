@@ -7,9 +7,9 @@ fun main () {
         "15-05-2025 15:05",
         4.367f)
 
-    val (name, description, date, distanceToEarth) = place
 
-    println("Созвездие $name изучено $date. $description Расстояние до Земли $distanceToEarth световых лет.")
+    println("Созвездие ${place.component1()} изучено ${place.component3()}. " +
+            "${place.component2()} Расстояние до Земли ${place.component4()} световых лет.")
 }
 
 data class GalacticGuide (
